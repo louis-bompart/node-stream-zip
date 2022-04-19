@@ -6,7 +6,11 @@ on:
   pull_request:
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [14, 16]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -19,9 +23,9 @@ jobs:
         run: npm run check-types
       - name: Run tests
         run: npm test
-      - name: Setup Node.js 14
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
-      - name: Run tests on Node.js 14
+          node-version: ${{ matrix.node }}
+      - name: Run tests
         run: npm test
