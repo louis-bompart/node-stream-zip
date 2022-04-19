@@ -345,10 +345,11 @@ module.exports.error['zip does not exist'] = function (test) {
         test.ok(false, 'Should throw an error');
     });
     zip.on('error', (err) => {
-        test.equal(
-            err.message,
-            "ENOENT: no such file or directory, open 'test/err/doesnotexist.zip'"
-        );
+        const errorFilePath =
+            process.platform === 'win32'
+                ? path.resolve('test/err/doesnotexist.zip')
+                : 'test/err/doesnotexist.zip';
+        test.equal(err.message, `ENOENT: no such file or directory, open '${errorFilePath}'`);
 
         try {
             zip.close();
